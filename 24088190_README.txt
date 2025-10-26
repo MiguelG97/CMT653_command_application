@@ -1,0 +1,2 @@
+Organization: JD Gyms (Fitness & Personal Training App)
+Types of appointment:
