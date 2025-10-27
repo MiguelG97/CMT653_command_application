@@ -234,4 +234,77 @@ public class Application {
         appointmentTypeSelected.addAppointmentId(newAppointment.getId());
         _appointments.add(newAppointment);
     }
+    public static void ViewInstructors(Scanner scanner,
+                                       HashSet<Instructor> _instructors){
+        //variables
+        StringBuilder sb = new StringBuilder();
+        String title = "-------------------\nInstructors: \n";
+        List<Instructor> instructorsSorted = _instructors.stream()
+                .sorted(Comparator.comparing(Instructor::getName))
+                .toList();
+        sb.append(title);
+        //list instructors
+        for (int i = 0; i < instructorsSorted.size(); i++) {
+            Instructor instructor = instructorsSorted.get(i);
+            sb.append(String.format("%s. %s\n",i+1,instructor.getName()));
+        }
+        //print result
+        System.out.println(sb);
+    }
+    public static void CreateInstructor(Scanner scanner,
+                                        HashSet<Instructor> _instructors,
+                                        HashSet<AppointmentType> _appointmentTypes){
+        //variables
+        StringBuilder sb = new StringBuilder();
+        String title = "-------------------\nCreate Instructor: \n";
+        String instructionMessage = "Please enter the instructor's name: ";
+        sb.append(title).append(instructionMessage);
+
+        //Input fields
+        System.out.println(sb);
+        String inputName = scanner.nextLine().trim();
+        while(inputName.isEmpty()){
+            System.out.print("Name can not be empty. Please enter a valid name: ");
+            inputName = scanner.nextLine().trim();
+        }
+
+        //New instance
+        Instructor newInstructor = new Instructor();
+        newInstructor.setName(inputName);
+        _instructors.add(newInstructor);
+
+        //Assign its area of expertise
+        sb.setLength(0);
+        sb.append("Select the area(s) of expertize (use commas to separate multiple choices):\n");
+        List<AppointmentType> appointmentTypesSorted = _appointmentTypes.stream()
+                .sorted(Comparator.comparing(AppointmentType::getName)).toList();
+        for (int i = 0; i < appointmentTypesSorted.size(); i++) {
+            AppointmentType appointmentType = appointmentTypesSorted.get(i);
+            sb.append(String.format("%s. %s\n", i+1, appointmentType.getName()));
+        }
+        sb.append(String.format("%s. All of them",appointmentTypesSorted.size()+1));
+        System.out.println(sb);
+
+        String indexesSelected = scanner.nextLine();
+        List<Integer> selectedIndexes= Arrays.stream(indexesSelected.split(","))
+                .map(String::trim)
+                .map(Integer::parseInt)
+                .toList();
+        if(selectedIndexes.contains(appointmentTypesSorted.size()+1)){
+            //Include all
+            appointmentTypesSorted.forEach(appointmentType ->
+                    appointmentType.addInstructorsId(newInstructor.getId()));
+        }
+        else {
+            //Only include selected indexes
+            for (int i = 0; i < appointmentTypesSorted.size(); i++) {
+                if(!selectedIndexes.contains(i+1)) continue;
+                AppointmentType appointmentType = appointmentTypesSorted.get(i);
+                appointmentType.addInstructorsId(newInstructor.getId());
+            }
+        }
+
+        //Confirmation Status
+        System.out.println("Instructor was successfully created!");
+    }
 }
