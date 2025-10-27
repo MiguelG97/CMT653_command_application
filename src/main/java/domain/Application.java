@@ -5,6 +5,9 @@ import entities.AppointmentType;
 import entities.Instructor;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class Application {
@@ -160,5 +163,75 @@ public class Application {
         scanner.nextLine();
         AppointmentType typeSelected = sortedAppointments.get(appointmentTypeSelected-1);
         _appointmentTypes.remove(typeSelected);
+    }
+    public static void CreateAppointment(Scanner scanner,
+                                         HashSet<AppointmentType> _appointmentTypes,
+                                         HashSet<Instructor> _instructors,
+                                         HashSet<Appointment> _appointments){
+        //variables
+        StringBuilder sb = new StringBuilder();
+        String title = "-------------------\nCreate New Appointment: \n";
+        String instructionMessage = "Please enter the customer's name: ";
+
+        //Customer name & Date
+        sb.append(title).append(instructionMessage);
+        System.out.println(sb);
+        String customerName = scanner.nextLine().trim();
+        while(customerName.isEmpty()){
+            System.out.print("Name can not be empty. Please enter a valid name: ");
+            customerName = scanner.nextLine().trim();
+        }
+
+        System.out.println("Enter the appointment date (Format: yyyy-mm-dd, e.g. 2025-10-17): ");
+        String dateInput = scanner.nextLine().trim();
+        LocalDate appointmentDate = null;
+        while (appointmentDate == null){
+            try{
+                appointmentDate = LocalDate.parse(dateInput);
+            }catch(DateTimeParseException e){
+                System.out.print("Invalid date format. Please enter a valid date: ");
+            }
+        }
+        Date dateValue = Date.from(appointmentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        //Assign appointment type
+        sb.setLength(0);
+        sb.append("Select the appointment type :\n");
+        List<AppointmentType> appointmentTypesSorted = _appointmentTypes.stream()
+                .sorted(Comparator.comparing(AppointmentType::getName)).toList();
+        for (int i = 0; i < appointmentTypesSorted.size(); i++) {
+            AppointmentType appointmentType = appointmentTypesSorted.get(i);
+            sb.append(String.format("%s. %s\n", i+1, appointmentType.getName()));
+        }
+        System.out.println(sb);
+
+        int appointmentTypeIndex = scanner.nextInt();
+        scanner.nextLine();
+        AppointmentType appointmentTypeSelected = appointmentTypesSorted.get(appointmentTypeIndex-1);
+
+        //Assign instructor
+        sb.setLength(0);
+        sb.append("Select an instructor:\n");
+        List<Instructor> instructorsSorted = _instructors.stream()
+                .sorted(Comparator.comparing(Instructor::getName)).toList();
+        for (int i = 0; i < instructorsSorted.size(); i++) {
+            Instructor instructor = instructorsSorted.get(i);
+            sb.append(String.format("%s. %s\n", i+1, instructor.getName()));
+        }
+        System.out.println(sb);
+
+        int instructorIndex = scanner.nextInt();
+        scanner.nextLine();
+        Instructor instructorSelected = instructorsSorted.get(instructorIndex-1);
+
+        //Assigning appointment to the respective appointment type
+        Appointment newAppointment = new Appointment();
+        newAppointment.setCustomerName(customerName);
+        newAppointment.setDate(dateValue);
+        newAppointment.setInstructorId(instructorSelected.getId());
+        newAppointment.setAppointmentTypeId(appointmentTypeSelected.getId());
+
+        appointmentTypeSelected.addAppointmentId(newAppointment.getId());
+        _appointments.add(newAppointment);
     }
 }
