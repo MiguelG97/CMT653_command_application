@@ -3,6 +3,7 @@ package domain;
 import entities.Appointment;
 import entities.AppointmentType;
 import entities.Instructor;
+import utilities.Validator;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -46,7 +47,7 @@ public class Application {
             System.out.println(sb);
 
             //list appointments booked
-            int appointmentTypeSelected = scanner.nextInt();
+            int appointmentTypeSelected = Validator.ValidateIntInput(scanner,1,typesSize+1);
             scanner.nextLine();
 
             if(appointmentTypeSelected == typesSize+1)backToMenu=true;
@@ -104,7 +105,8 @@ public class Application {
         ------------------- \n Creating new appointment type: \n
             - Please enter the name of the appointment type:
         """);
-        newAppointmentType.setName(scanner.nextLine());
+        String typeName = Validator.ValidateTextInput(scanner,"Name can not be empty. Please enter a valid name: ");
+        newAppointmentType.setName(typeName);
 
         //assign instructors
         List<Instructor> instructorsSorted = _instructors.stream().sorted(Comparator.comparing(Instructor::getName)).toList();
@@ -116,11 +118,7 @@ public class Application {
         sb.append(String.format("%s. Include All\n", instructorsSorted.size()+1));
         System.out.println(sb);
 
-        String indexesSelectedInput = scanner.nextLine();
-        List<Integer> selectedIndexes= Arrays.stream(indexesSelectedInput.split(","))
-                .map(String::trim)
-                .map(Integer::parseInt)
-                .toList();
+        List<Integer> selectedIndexes = Validator.ValidateMultipleIntInput(scanner,1,instructorsSorted.size()+1);
         if(selectedIndexes.contains(instructorsSorted.size()+1)){
             //Include all
             instructorsSorted.forEach(instructor ->
@@ -159,7 +157,7 @@ public class Application {
         System.out.println(sb);
 
         //Delete appointment type
-        int appointmentTypeSelected = scanner.nextInt();
+        int appointmentTypeSelected = Validator.ValidateIntInput(scanner,1,typesSize);
         scanner.nextLine();
         AppointmentType typeSelected = sortedAppointments.get(appointmentTypeSelected-1);
         _appointmentTypes.remove(typeSelected);
@@ -176,11 +174,7 @@ public class Application {
         //Customer name & Date
         sb.append(title).append(instructionMessage);
         System.out.println(sb);
-        String customerName = scanner.nextLine().trim();
-        while(customerName.isEmpty()){
-            System.out.print("Name can not be empty. Please enter a valid name: ");
-            customerName = scanner.nextLine().trim();
-        }
+        String customerName = Validator.ValidateTextInput(scanner,"Name can not be empty. Please enter a valid name: ");
 
         System.out.println("Enter the appointment date (Format: yyyy-mm-dd, e.g. 2025-10-17): ");
         String dateInput = scanner.nextLine().trim();
@@ -205,7 +199,7 @@ public class Application {
         }
         System.out.println(sb);
 
-        int appointmentTypeIndex = scanner.nextInt();
+        int appointmentTypeIndex = Validator.ValidateIntInput(scanner,1,_appointmentTypes.size());
         scanner.nextLine();
         AppointmentType appointmentTypeSelected = appointmentTypesSorted.get(appointmentTypeIndex-1);
 
@@ -220,8 +214,7 @@ public class Application {
         }
         System.out.println(sb);
 
-        int instructorIndex = scanner.nextInt();
-        scanner.nextLine();
+        int instructorIndex = Validator.ValidateIntInput(scanner,1,instructorsSorted.size());
         Instructor instructorSelected = instructorsSorted.get(instructorIndex-1);
 
         //Assigning appointment to the respective appointment type
@@ -262,11 +255,8 @@ public class Application {
 
         //Input fields
         System.out.println(sb);
-        String inputName = scanner.nextLine().trim();
-        while(inputName.isEmpty()){
-            System.out.print("Name can not be empty. Please enter a valid name: ");
-            inputName = scanner.nextLine().trim();
-        }
+        String inputName = Validator.ValidateTextInput(scanner
+                ,"Name can not be empty. Please enter a valid name: ");
 
         //New instance
         Instructor newInstructor = new Instructor();
@@ -285,11 +275,7 @@ public class Application {
         sb.append(String.format("%s. All of them",appointmentTypesSorted.size()+1));
         System.out.println(sb);
 
-        String indexesSelected = scanner.nextLine();
-        List<Integer> selectedIndexes= Arrays.stream(indexesSelected.split(","))
-                .map(String::trim)
-                .map(Integer::parseInt)
-                .toList();
+        List<Integer> selectedIndexes = Validator.ValidateMultipleIntInput(scanner,1,appointmentTypesSorted.size()+1);
         if(selectedIndexes.contains(appointmentTypesSorted.size()+1)){
             //Include all
             appointmentTypesSorted.forEach(appointmentType ->

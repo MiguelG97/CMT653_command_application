@@ -2,11 +2,14 @@ import domain.Application;
 import entities.Appointment;
 import entities.AppointmentType;
 import entities.Instructor;
-import utilities.GeneratorUtility;
+import utilities.Generator;
+import utilities.Validator;
+
 import java.util.HashSet;
 import java.util.Scanner;
 
 public class JDGymApp {
+
     //performance: We plan to list the appointment in alphabetical order, so there is no need to store them in a list
     private final static HashSet<AppointmentType> _appointmentTypes = new  HashSet<AppointmentType>();
     private final static HashSet<Appointment> _appointments = new HashSet<>();
@@ -15,8 +18,8 @@ public class JDGymApp {
     public static  void  main(String[] args){
 
         //Generators
-        GeneratorUtility.GenerateInstructors(_instructors);
-        GeneratorUtility.GenerateInitialAppointmentTypes(_appointmentTypes,_appointments,_instructors);
+        Generator.GenerateInstructors(_instructors);
+        Generator.GenerateInitialAppointmentTypes(_appointmentTypes,_appointments,_instructors);
 
         //Variables
         Scanner scanner = new Scanner(System.in);
@@ -38,8 +41,8 @@ public class JDGymApp {
                 7. Exit
                 "Enter your choice: "
                 """);
-                int mainChoice = scanner.nextInt();
-                scanner.nextLine();//handle text errors here?? nextInt perhaps?
+                int mainChoice = Validator.ValidateIntInput(scanner,1,7);
+                scanner.nextLine();
 
                 switch (mainChoice) {
                     case 1:
