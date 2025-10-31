@@ -9,7 +9,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashSet;
 
-public class GeneratorUtility
+public class Generator
 {
     /**
      * This method populates the {@code _instructors} variable with {@code 2} initial instructors
