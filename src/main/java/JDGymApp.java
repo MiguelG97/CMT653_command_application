@@ -57,8 +57,10 @@ public class JDGymApp {
                         Application.CreateAppointment(scanner, _appointmentTypes, _instructors,_appointments);
                         break;
                     case 5:
+                        Application.ViewInstructors(scanner,_instructors);
                         break;
                     case 6:
+                        Application.CreateInstructor(scanner,_instructors,_appointmentTypes);
                         break;
                     case 7:
                         runningApp = false;
