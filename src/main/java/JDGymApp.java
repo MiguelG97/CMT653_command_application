@@ -54,6 +54,7 @@ public class JDGymApp {
                         Application.DeleteAppointmentType(scanner,_appointmentTypes);
                         break;
                     case 4:
+                        Application.CreateAppointment(scanner, _appointmentTypes, _instructors,_appointments);
                         break;
                     case 5:
                         break;
