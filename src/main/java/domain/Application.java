@@ -13,7 +13,8 @@ import java.util.*;
 
 public class Application {
     /**
-     *
+     * It lists all available {@code AppointmentType} and
+     * prompts user to select one of them to view all its appointments booked.
      * @param scanner
      * @param _appointmentTypes
      * @param _appointments
@@ -89,7 +90,7 @@ public class Application {
     }
 
     /**
-     * It creates new {@code AppointmentType} and prompts user to select instructors
+     * It creates new {@code AppointmentType} and assigns instructors to it
      * @param scanner
      * @param _appointmentTypes
      */
@@ -136,6 +137,12 @@ public class Application {
         //Update the list
         _appointmentTypes.add(newAppointmentType);
     }
+
+    /**
+     * It deletes an {@code AppointmentType}
+     * @param scanner
+     * @param _appointmentTypes
+     */
     public static void DeleteAppointmentType(Scanner scanner,
                                              HashSet<AppointmentType> _appointmentTypes) {
         //variables
@@ -162,6 +169,14 @@ public class Application {
         AppointmentType typeSelected = sortedAppointments.get(appointmentTypeSelected-1);
         _appointmentTypes.remove(typeSelected);
     }
+
+    /**
+     * It creates a new {@code Appointment}
+     * @param scanner
+     * @param _appointmentTypes
+     * @param _instructors
+     * @param _appointments
+     */
     public static void CreateAppointment(Scanner scanner,
                                          HashSet<AppointmentType> _appointmentTypes,
                                          HashSet<Instructor> _instructors,
@@ -227,6 +242,12 @@ public class Application {
         appointmentTypeSelected.addAppointmentId(newAppointment.getId());
         _appointments.add(newAppointment);
     }
+
+    /**
+     * It lists all existing {@code Instructors}
+     * @param scanner
+     * @param _instructors
+     */
     public static void ViewInstructors(Scanner scanner,
                                        HashSet<Instructor> _instructors){
         //variables
@@ -244,6 +265,13 @@ public class Application {
         //print result
         System.out.println(sb);
     }
+
+    /**
+     * It creates a new {@code Instructor}
+     * @param scanner
+     * @param _instructors
+     * @param _appointmentTypes
+     */
     public static void CreateInstructor(Scanner scanner,
                                         HashSet<Instructor> _instructors,
                                         HashSet<AppointmentType> _appointmentTypes){

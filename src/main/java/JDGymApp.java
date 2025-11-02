@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 public class JDGymApp {
-
-    //performance: We plan to list the appointment in alphabetical order, so there is no need to store them in a list
     private final static HashSet<AppointmentType> _appointmentTypes = new  HashSet<AppointmentType>();
     private final static HashSet<Appointment> _appointments = new HashSet<>();
     private final static HashSet<Instructor> _instructors = new  HashSet<Instructor>();

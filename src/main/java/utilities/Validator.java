@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class Validator {
 
     /**
-     *
+     * It validates user input is non-empty text.
      * @param scanner
      * @param message e.g: Input can not be empty. Please enter a valid text:
      * @return
