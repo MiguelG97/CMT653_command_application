@@ -2,7 +2,7 @@ package entities;
 
 import java.util.UUID;
 
-public class BaseClass {
+public abstract class BaseClass {
     private final UUID id;
     private String name;
     public BaseClass() {

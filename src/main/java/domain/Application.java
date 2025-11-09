@@ -3,6 +3,8 @@ package domain;
 import entities.Appointment;
 import entities.AppointmentType;
 import entities.Instructor;
+import interfaces.IApplication;
+import interfaces.IValidator;
 import utilities.Validator;
 
 import java.text.SimpleDateFormat;
@@ -11,7 +13,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-public class Application {
+public class Application implements IApplication {
+    private final static IValidator _validator = new Validator();
+
+
     /**
      * It lists all available {@code AppointmentType} and
      * prompts user to select one of them to view all its appointments booked.
@@ -19,7 +24,7 @@ public class Application {
      * @param _appointmentTypes
      * @param _appointments
      */
-    public static void ListAndViewAllAppointmentTypes(Scanner scanner,
+    public void ListAndViewAllAppointmentTypes(Scanner scanner,
                                                       HashSet<AppointmentType> _appointmentTypes,
                                                       HashSet<Appointment> _appointments,
                                                       HashSet<Instructor> _instructors) {
@@ -48,7 +53,7 @@ public class Application {
             System.out.println(sb);
 
             //list appointments booked
-            int appointmentTypeSelected = Validator.ValidateIntInput(scanner,1,typesSize+1);
+            int appointmentTypeSelected = _validator.ValidateIntInput(scanner,1,typesSize+1);
             scanner.nextLine();
 
             if(appointmentTypeSelected == typesSize+1)backToMenu=true;
@@ -64,7 +69,7 @@ public class Application {
      * @param
      * @return
      */
-    private static void ViewAppointmentsByType(UUID appointmentTypeId,
+    private void ViewAppointmentsByType(UUID appointmentTypeId,
                                                HashSet<Appointment> _appointments,
                                                HashSet<Instructor> _instructors) {
         //variables
@@ -94,7 +99,7 @@ public class Application {
      * @param scanner
      * @param _appointmentTypes
      */
-    public static void CreateAppointmentType(Scanner scanner,
+    public void CreateAppointmentType(Scanner scanner,
                                              HashSet<AppointmentType> _appointmentTypes,
                                              HashSet<Instructor> _instructors) {
         //variables
@@ -106,7 +111,7 @@ public class Application {
         ------------------- \n Creating new appointment type: \n
             - Please enter the name of the appointment type:
         """);
-        String typeName = Validator.ValidateTextInput(scanner,"Name can not be empty. Please enter a valid name: ");
+        String typeName = _validator.ValidateTextInput(scanner,"Name can not be empty. Please enter a valid name: ");
         newAppointmentType.setName(typeName);
 
         //assign instructors
@@ -119,7 +124,7 @@ public class Application {
         sb.append(String.format("%s. Include All\n", instructorsSorted.size()+1));
         System.out.println(sb);
 
-        List<Integer> selectedIndexes = Validator.ValidateMultipleIntInput(scanner,1,instructorsSorted.size()+1);
+        List<Integer> selectedIndexes = _validator.ValidateMultipleIntInput(scanner,1,instructorsSorted.size()+1);
         if(selectedIndexes.contains(instructorsSorted.size()+1)){
             //Include all
             instructorsSorted.forEach(instructor ->
@@ -143,7 +148,7 @@ public class Application {
      * @param scanner
      * @param _appointmentTypes
      */
-    public static void DeleteAppointmentType(Scanner scanner,
+    public void DeleteAppointmentType(Scanner scanner,
                                              HashSet<AppointmentType> _appointmentTypes) {
         //variables
         StringBuilder sb = new StringBuilder();
@@ -164,7 +169,7 @@ public class Application {
         System.out.println(sb);
 
         //Delete appointment type
-        int appointmentTypeSelected = Validator.ValidateIntInput(scanner,1,typesSize);
+        int appointmentTypeSelected = _validator.ValidateIntInput(scanner,1,typesSize);
         scanner.nextLine();
         AppointmentType typeSelected = sortedAppointments.get(appointmentTypeSelected-1);
         _appointmentTypes.remove(typeSelected);
@@ -177,7 +182,7 @@ public class Application {
      * @param _instructors
      * @param _appointments
      */
-    public static void CreateAppointment(Scanner scanner,
+    public void CreateAppointment(Scanner scanner,
                                          HashSet<AppointmentType> _appointmentTypes,
                                          HashSet<Instructor> _instructors,
                                          HashSet<Appointment> _appointments){
@@ -189,19 +194,8 @@ public class Application {
         //Customer name & Date
         sb.append(title).append(instructionMessage);
         System.out.println(sb);
-        String customerName = Validator.ValidateTextInput(scanner,"Name can not be empty. Please enter a valid name: ");
-
-        System.out.println("Enter the appointment date (Format: yyyy-mm-dd, e.g. 2025-10-17): ");
-        String dateInput = scanner.nextLine().trim();
-        LocalDate appointmentDate = null;
-        while (appointmentDate == null){
-            try{
-                appointmentDate = LocalDate.parse(dateInput);
-            }catch(DateTimeParseException e){
-                System.out.print("Invalid date format. Please enter a valid date: ");
-            }
-        }
-        Date dateValue = Date.from(appointmentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        String customerName = _validator.ValidateTextInput(scanner,"Name can not be empty. Please enter a valid name: ");
+        Date dateValue = _validator.ValidateDateInput(scanner);
 
         //Assign appointment type
         sb.setLength(0);
@@ -214,7 +208,7 @@ public class Application {
         }
         System.out.println(sb);
 
-        int appointmentTypeIndex = Validator.ValidateIntInput(scanner,1,_appointmentTypes.size());
+        int appointmentTypeIndex = _validator.ValidateIntInput(scanner,1,_appointmentTypes.size());
         scanner.nextLine();
         AppointmentType appointmentTypeSelected = appointmentTypesSorted.get(appointmentTypeIndex-1);
 
@@ -229,7 +223,7 @@ public class Application {
         }
         System.out.println(sb);
 
-        int instructorIndex = Validator.ValidateIntInput(scanner,1,instructorsSorted.size());
+        int instructorIndex = _validator.ValidateIntInput(scanner,1,instructorsSorted.size());
         Instructor instructorSelected = instructorsSorted.get(instructorIndex-1);
 
         //Assigning appointment to the respective appointment type
@@ -248,7 +242,7 @@ public class Application {
      * @param scanner
      * @param _instructors
      */
-    public static void ViewInstructors(Scanner scanner,
+    public void ViewInstructors(Scanner scanner,
                                        HashSet<Instructor> _instructors){
         //variables
         StringBuilder sb = new StringBuilder();
@@ -272,7 +266,7 @@ public class Application {
      * @param _instructors
      * @param _appointmentTypes
      */
-    public static void CreateInstructor(Scanner scanner,
+    public void CreateInstructor(Scanner scanner,
                                         HashSet<Instructor> _instructors,
                                         HashSet<AppointmentType> _appointmentTypes){
         //variables
@@ -283,7 +277,7 @@ public class Application {
 
         //Input fields
         System.out.println(sb);
-        String inputName = Validator.ValidateTextInput(scanner
+        String inputName = _validator.ValidateTextInput(scanner
                 ,"Name can not be empty. Please enter a valid name: ");
 
         //New instance
@@ -303,7 +297,7 @@ public class Application {
         sb.append(String.format("%s. All of them",appointmentTypesSorted.size()+1));
         System.out.println(sb);
 
-        List<Integer> selectedIndexes = Validator.ValidateMultipleIntInput(scanner,1,appointmentTypesSorted.size()+1);
+        List<Integer> selectedIndexes = _validator.ValidateMultipleIntInput(scanner,1,appointmentTypesSorted.size()+1);
         if(selectedIndexes.contains(appointmentTypesSorted.size()+1)){
             //Include all
             appointmentTypesSorted.forEach(appointmentType ->

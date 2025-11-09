@@ -2,6 +2,9 @@ import domain.Application;
 import entities.Appointment;
 import entities.AppointmentType;
 import entities.Instructor;
+import interfaces.IApplication;
+import interfaces.IGenerator;
+import interfaces.IValidator;
 import utilities.Generator;
 import utilities.Validator;
 
@@ -13,11 +16,14 @@ public class JDGymApp {
     private final static HashSet<Appointment> _appointments = new HashSet<>();
     private final static HashSet<Instructor> _instructors = new  HashSet<Instructor>();
 
+    private final static IApplication _application = new Application();
+    private final static IGenerator _generator = new Generator();
+    private final static IValidator _validator = new Validator();
     public static  void  main(String[] args){
 
         //Generators
-        Generator.GenerateInstructors(_instructors);
-        Generator.GenerateInitialAppointmentTypes(_appointmentTypes,_appointments,_instructors);
+        _generator.GenerateInstructors(_instructors);
+        _generator.GenerateInitialAppointmentTypes(_appointmentTypes,_appointments,_instructors);
 
         //Variables
         Scanner scanner = new Scanner(System.in);
@@ -35,33 +41,33 @@ public class JDGymApp {
                 3. Delete an appointment type
                 4. Create a new appointment
                 5. List all instructors
-                6. Create a new instructor
+                6. Create a new instructor´
                 7. Exit
                 "Enter your choice: "
                 """);
-                int mainChoice = Validator.ValidateIntInput(scanner,1,7);
+                int mainChoice = _validator.ValidateIntInput(scanner,1,7);
                 scanner.nextLine();
 
                 switch (mainChoice) {
                     case 1:
-                        Application.ListAndViewAllAppointmentTypes(scanner,
+                        _application.ListAndViewAllAppointmentTypes(scanner,
                                 _appointmentTypes,_appointments,_instructors);
                         break;
                     case 2:
-                        Application.CreateAppointmentType(scanner,_appointmentTypes,
+                        _application.CreateAppointmentType(scanner,_appointmentTypes,
                                 _instructors);
                         break;
                     case 3:
-                        Application.DeleteAppointmentType(scanner,_appointmentTypes);
+                        _application.DeleteAppointmentType(scanner,_appointmentTypes);
                         break;
                     case 4:
-                        Application.CreateAppointment(scanner, _appointmentTypes, _instructors,_appointments);
+                        _application.CreateAppointment(scanner, _appointmentTypes, _instructors,_appointments);
                         break;
                     case 5:
-                        Application.ViewInstructors(scanner,_instructors);
+                        _application.ViewInstructors(scanner,_instructors);
                         break;
                     case 6:
-                        Application.CreateInstructor(scanner,_instructors,_appointmentTypes);
+                        _application.CreateInstructor(scanner,_instructors,_appointmentTypes);
                         break;
                     case 7:
                         runningApp = false;
