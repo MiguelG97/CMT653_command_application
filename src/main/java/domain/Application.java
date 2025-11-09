@@ -8,13 +8,10 @@ import interfaces.IValidator;
 import utilities.Validator;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class Application implements IApplication {
-    private final static IValidator _validator = new Validator();
+    private final IValidator _validator = new Validator();
 
 
     /**
@@ -28,13 +25,13 @@ public class Application implements IApplication {
                                                       HashSet<AppointmentType> _appointmentTypes,
                                                       HashSet<Appointment> _appointments,
                                                       HashSet<Instructor> _instructors) {
-        //variables
+        //1) variables
         StringBuilder sb = new StringBuilder();
         String title = "-------------------\nAppointmentTypes: \n";
         String instructionMessage = "Select a type to visualize the available bookings: ";
         boolean backToMenu = false;
 
-        //List appointments
+        //2) List appointment types
         List<AppointmentType> sortedAppointments = _appointmentTypes.stream()
                 .sorted(Comparator.comparing(AppointmentType::getName))
                 .toList();
@@ -49,10 +46,9 @@ public class Application implements IApplication {
                 .append(instructionMessage);
 
         while (!backToMenu) {
-            //print appointment types
             System.out.println(sb);
 
-            //list appointments booked
+            //3) list appointments booked for the selected appointment type
             int appointmentTypeSelected = _validator.ValidateIntInput(scanner,1,typesSize+1);
             scanner.nextLine();
 
@@ -72,7 +68,7 @@ public class Application implements IApplication {
     private void ViewAppointmentsByType(UUID appointmentTypeId,
                                                HashSet<Appointment> _appointments,
                                                HashSet<Instructor> _instructors) {
-        //variables
+        //1) variables
         StringBuilder sb = new StringBuilder();
         String title = "-------------------\nAppointments: \n";
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -80,7 +76,8 @@ public class Application implements IApplication {
                 .filter(at->at.getAppointmentTypeId().equals(appointmentTypeId))
                 .toList();
         sb.append(title);
-        //list appointments booked
+
+        //2) list appointments booked
         for (int i = 1; i <= filteredAppointments.size(); i++) {
             Appointment appointment = filteredAppointments.get(i - 1);
             UUID instructorId = appointment.getInstructorId();
@@ -90,7 +87,6 @@ public class Application implements IApplication {
                     appointment.getCustomerName(),formatter.format(appointment.getDate()),
                     instructorFound.get().getName()));
         }
-        //print result
         System.out.println(sb);
     }
 
@@ -102,11 +98,11 @@ public class Application implements IApplication {
     public void CreateAppointmentType(Scanner scanner,
                                              HashSet<AppointmentType> _appointmentTypes,
                                              HashSet<Instructor> _instructors) {
-        //variables
+        //1) variables
         StringBuilder sb = new StringBuilder();
         AppointmentType newAppointmentType = new AppointmentType();
 
-        //assign name
+        //2) assign name
         System.out.println("""
         ------------------- \n Creating new appointment type: \n
             - Please enter the name of the appointment type:
@@ -114,7 +110,7 @@ public class Application implements IApplication {
         String typeName = _validator.ValidateTextInput(scanner,"Name can not be empty. Please enter a valid name: ");
         newAppointmentType.setName(typeName);
 
-        //assign instructors
+        //3) assign instructors
         List<Instructor> instructorsSorted = _instructors.stream().sorted(Comparator.comparing(Instructor::getName)).toList();
         sb.append("Select instructors for this appointment type (use commas to separate multiple choices):\n");
         for (int i = 0; i < instructorsSorted.size(); i++) {
@@ -139,7 +135,7 @@ public class Application implements IApplication {
             }
         }
 
-        //Update the list
+        //4) Update the list
         _appointmentTypes.add(newAppointmentType);
     }
 
@@ -150,12 +146,12 @@ public class Application implements IApplication {
      */
     public void DeleteAppointmentType(Scanner scanner,
                                              HashSet<AppointmentType> _appointmentTypes) {
-        //variables
+        //1) variables
         StringBuilder sb = new StringBuilder();
         String title = "-------------------\nDelete An Appointment Type: \n";
         String instructionMessage = "Select a type to delete: ";
 
-        //List appointments
+        //2) List appointments
         List<AppointmentType> sortedAppointments = _appointmentTypes.stream()
                 .sorted(Comparator.comparing(AppointmentType::getName))
                 .toList();
@@ -168,7 +164,7 @@ public class Application implements IApplication {
         sb.append(instructionMessage);
         System.out.println(sb);
 
-        //Delete appointment type
+        //3) Delete appointment type
         int appointmentTypeSelected = _validator.ValidateIntInput(scanner,1,typesSize);
         scanner.nextLine();
         AppointmentType typeSelected = sortedAppointments.get(appointmentTypeSelected-1);
@@ -186,18 +182,18 @@ public class Application implements IApplication {
                                          HashSet<AppointmentType> _appointmentTypes,
                                          HashSet<Instructor> _instructors,
                                          HashSet<Appointment> _appointments){
-        //variables
+        //1) variables
         StringBuilder sb = new StringBuilder();
         String title = "-------------------\nCreate New Appointment: \n";
         String instructionMessage = "Please enter the customer's name: ";
 
-        //Customer name & Date
+        //2) Customer name & Date
         sb.append(title).append(instructionMessage);
         System.out.println(sb);
         String customerName = _validator.ValidateTextInput(scanner,"Name can not be empty. Please enter a valid name: ");
         Date dateValue = _validator.ValidateDateInput(scanner);
 
-        //Assign appointment type
+        //3) Assign appointment type
         sb.setLength(0);
         sb.append("Select the appointment type :\n");
         List<AppointmentType> appointmentTypesSorted = _appointmentTypes.stream()
@@ -212,7 +208,7 @@ public class Application implements IApplication {
         scanner.nextLine();
         AppointmentType appointmentTypeSelected = appointmentTypesSorted.get(appointmentTypeIndex-1);
 
-        //Assign instructor
+        //4) Assign instructor
         sb.setLength(0);
         sb.append("Select an instructor:\n");
         List<Instructor> instructorsSorted = _instructors.stream()
@@ -226,7 +222,7 @@ public class Application implements IApplication {
         int instructorIndex = _validator.ValidateIntInput(scanner,1,instructorsSorted.size());
         Instructor instructorSelected = instructorsSorted.get(instructorIndex-1);
 
-        //Assigning appointment to the respective appointment type
+        //5) Assigning appointment to the respective appointment type
         Appointment newAppointment = new Appointment();
         newAppointment.setCustomerName(customerName);
         newAppointment.setDate(dateValue);
@@ -244,19 +240,18 @@ public class Application implements IApplication {
      */
     public void ViewInstructors(Scanner scanner,
                                        HashSet<Instructor> _instructors){
-        //variables
+        //1) variables
         StringBuilder sb = new StringBuilder();
         String title = "-------------------\nInstructors: \n";
         List<Instructor> instructorsSorted = _instructors.stream()
                 .sorted(Comparator.comparing(Instructor::getName))
                 .toList();
         sb.append(title);
-        //list instructors
+        //2) list instructors
         for (int i = 0; i < instructorsSorted.size(); i++) {
             Instructor instructor = instructorsSorted.get(i);
             sb.append(String.format("%s. %s\n",i+1,instructor.getName()));
         }
-        //print result
         System.out.println(sb);
     }
 
@@ -269,23 +264,23 @@ public class Application implements IApplication {
     public void CreateInstructor(Scanner scanner,
                                         HashSet<Instructor> _instructors,
                                         HashSet<AppointmentType> _appointmentTypes){
-        //variables
+        //1) variables
         StringBuilder sb = new StringBuilder();
         String title = "-------------------\nCreate Instructor: \n";
         String instructionMessage = "Please enter the instructor's name: ";
         sb.append(title).append(instructionMessage);
 
-        //Input fields
+        //2) Input fields
         System.out.println(sb);
         String inputName = _validator.ValidateTextInput(scanner
                 ,"Name can not be empty. Please enter a valid name: ");
 
-        //New instance
+        //3) New instance
         Instructor newInstructor = new Instructor();
         newInstructor.setName(inputName);
         _instructors.add(newInstructor);
 
-        //Assign its area of expertise
+        //4) Assign its area of expertise
         sb.setLength(0);
         sb.append("Select the area(s) of expertize (use commas to separate multiple choices):\n");
         List<AppointmentType> appointmentTypesSorted = _appointmentTypes.stream()
@@ -311,8 +306,6 @@ public class Application implements IApplication {
                 appointmentType.addInstructorsId(newInstructor.getId());
             }
         }
-
-        //Confirmation Status
         System.out.println("Instructor was successfully created!");
     }
 }

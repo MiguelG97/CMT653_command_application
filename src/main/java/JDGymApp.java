@@ -12,24 +12,31 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 public class JDGymApp {
+
+    //Core entites as variables
     private final static HashSet<AppointmentType> _appointmentTypes = new  HashSet<AppointmentType>();
     private final static HashSet<Appointment> _appointments = new HashSet<>();
     private final static HashSet<Instructor> _instructors = new  HashSet<Instructor>();
 
+    //Business logic
     private final static IApplication _application = new Application();
+
+    //helpers
     private final static IGenerator _generator = new Generator();
     private final static IValidator _validator = new Validator();
+
+    //App entry point
     public static  void  main(String[] args){
 
-        //Generators
+        //step 1: Generate dummy data
         _generator.GenerateInstructors(_instructors);
         _generator.GenerateInitialAppointmentTypes(_appointmentTypes,_appointments,_instructors);
 
-        //Variables
+        //step 2: Scoped variables
         Scanner scanner = new Scanner(System.in);
         boolean runningApp = true;
 
-        //Main app
+        //step 3: Handle user interaction
         try {
             while (runningApp) {
                 System.out.println("""
@@ -83,7 +90,7 @@ public class JDGymApp {
             System.out.println("Something went wrong: " + msg);
         }
 
-        //Disposing variables
+        //4) Dispose variables
         _appointmentTypes.clear();
         _appointments.clear();
         _instructors.clear();

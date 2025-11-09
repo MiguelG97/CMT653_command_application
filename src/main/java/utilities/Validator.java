@@ -101,6 +101,11 @@ public class Validator implements IValidator {
         return selectedIndexes;
     }
 
+    /**
+     *  It validates user select a valid date using the format yyyy-mm-dd
+     * @param scanner
+     * @return
+     */
     public Date ValidateDateInput(Scanner scanner){
         System.out.println("Enter the appointment date (Format: yyyy-mm-dd, e.g. 2025-10-17): ");
         LocalDate appointmentDate = null;
