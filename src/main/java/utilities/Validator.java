@@ -1,22 +1,25 @@
 package utilities;
 
-import entities.Instructor;
+import interfaces.IValidator;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 
-public class Validator {
+public class Validator implements IValidator {
 
     /**
-     *
+     * It validates user input is non-empty text.
      * @param scanner
      * @param message e.g: Input can not be empty. Please enter a valid text:
      * @return
      */
-    public static String ValidateTextInput(Scanner scanner,
+    public String ValidateTextInput(Scanner scanner,
                                            String message){
         String inputString= scanner.nextLine().trim();
         while(inputString.isEmpty()){
@@ -33,7 +36,7 @@ public class Validator {
      * @param max
      * @return
      */
-    public static int ValidateIntInput(Scanner scanner,int min,int max){
+    public int ValidateIntInput(Scanner scanner,int min,int max){
         int inputInt =0;
         boolean validInt = false;
         while (!validInt) {
@@ -60,7 +63,7 @@ public class Validator {
      * @param max
      * @return
      */
-    public static List<Integer> ValidateMultipleIntInput(Scanner scanner,int min,int max){
+    public List<Integer> ValidateMultipleIntInput(Scanner scanner,int min,int max){
         List<Integer> selectedIndexes = new ArrayList<>();
         boolean validInput = false;
         while (!validInput) {
@@ -96,5 +99,24 @@ public class Validator {
         }
 
         return selectedIndexes;
+    }
+
+    /**
+     *  It validates user select a valid date using the format yyyy-mm-dd
+     * @param scanner
+     * @return
+     */
+    public Date ValidateDateInput(Scanner scanner){
+        System.out.println("Enter the appointment date (Format: yyyy-mm-dd, e.g. 2025-10-17): ");
+        LocalDate appointmentDate = null;
+        while (appointmentDate == null){
+            String dateInput = scanner.nextLine().trim();
+            try{
+                appointmentDate = LocalDate.parse(dateInput);
+            }catch(DateTimeParseException e){
+                System.out.print("Invalid date format. Please enter a valid date: ");
+            }
+        }
+        return Date.from(appointmentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }

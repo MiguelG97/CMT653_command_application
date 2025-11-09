@@ -1,2 +1,21 @@
-Organization: JD Gyms (Fitness & Personal Training App)
+Organization:
+- JD Gyms (Fitness & Personal Training App)
+
 Types of appointment:
+The following list presents the different types of appointments that can be found in the organization:
+
+- Personal Training Sessions (Initially Created)
+- Yoga Sessions (Initially Created)
+- Nutrition Plan Consultation
+- Crossfit Training
+- Health & Diagnostic
+- Body Composition Analysis
+- Chiropractor Appointment
+- Equipment Introduction Session
+
+Additional Functionalities:
+Alongside the core features, this application also supports:
+
+- Viewing the list of instructors working in the organization
+- Creating new instructors and assigning them an appointment type based on their expertise
+- Prompting the user to select an instructor when booking a new appointment for a client

@@ -3,18 +3,19 @@ package utilities;
 import entities.Appointment;
 import entities.AppointmentType;
 import entities.Instructor;
+import interfaces.IGenerator;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashSet;
 
-public class Generator
+public class Generator implements IGenerator
 {
     /**
      * This method populates the {@code _instructors} variable with {@code 2} initial instructors
      */
-    public static  void GenerateInstructors(HashSet<Instructor>  _instructors){
+    public void GenerateInstructors(HashSet<Instructor>  _instructors){
         Instructor instructor1 = new Instructor();
         instructor1.setName("Sam Altman");
         _instructors.add(instructor1);
@@ -27,7 +28,7 @@ public class Generator
      * This method populates the {@code _appointmentTypes} variable with {@code 2} initial appointment types
      * and 2 booked appointments each.
      */
-    public static void GenerateInitialAppointmentTypes(HashSet<AppointmentType> _appointmentTypes,
+    public void GenerateInitialAppointmentTypes(HashSet<AppointmentType> _appointmentTypes,
                                                        HashSet<Appointment> _appointments,
                                                         HashSet<Instructor>  _instructors){
         //To not throw error when querying an empty hashset

@@ -5,8 +5,6 @@ import java.util.UUID;
 
 
 public class AppointmentType extends BaseClass {
-    //final since we do not plan to reassign the hashset, but just add or remove values from the set.
-    //increase performance.
     private final HashSet<UUID> appointmentIds= new HashSet<UUID>();
     private final HashSet<UUID> instructorsIds= new HashSet<UUID>();
 
